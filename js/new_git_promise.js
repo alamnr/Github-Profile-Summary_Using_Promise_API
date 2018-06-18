@@ -166,6 +166,11 @@ function getUserInfo(userName,dataObj){
     });
   },Promise.resolve());
   
+  if(dataObj.getRepos().filter(repo => {
+    return repo.fork === false && repo.size !== 0
+  }).length===0){
+    calculateDataAndGenerateChart(dataObj);
+  }
   
  
 }).catch(err=>console.log(err))
