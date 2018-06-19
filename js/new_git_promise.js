@@ -131,7 +131,7 @@ function getUserInfo(userName, dataObj) {
 
       // Good (data fetch time is high) Optimised solution see link - https://developers.google.com/web/fundamentals/primers/promises#creating_a_sequence
 
-
+/*
       
      var sequence = Promise.resolve();
   
@@ -158,7 +158,7 @@ function getUserInfo(userName, dataObj) {
          });
         
       }) 
-
+*/
       // Better  (data fetch time is medium)  Optimised solution see link - https://developers.google.com/web/fundamentals/primers/promises#creating_a_sequence
 
       /*      
@@ -192,7 +192,7 @@ function getUserInfo(userName, dataObj) {
 
 
       //  Best (data fetch time is low) Optimised solution see link - https://developers.google.com/web/fundamentals/primers/promises#creating_a_sequence
-    /*
+    
       dataObj.getRepos().filter(repo => {
         return repo.fork === false && repo.size !== 0
       }).map((repo) => {
@@ -215,7 +215,7 @@ function getUserInfo(userName, dataObj) {
           }
         });
       }, Promise.resolve());
-      */
+      
 
       if (dataObj.getRepos().filter(repo => {
         return repo.fork === false && repo.size !== 0
