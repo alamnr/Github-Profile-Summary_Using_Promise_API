@@ -8,15 +8,15 @@ body {
     font-family: 'Barlow Semi Condensed', sans-serif;
     background-color: #eee9df;
     color: #333;
-   
+
 }
 #nav{
     background: #eee9df;
-} 
+}
 
 footer {
     text-align: center;
-    
+
 
 }
 .fixed-bottom-custom {
@@ -75,6 +75,18 @@ footer a:hover {
 .rate-limit .msg {
     display: none;
 }
+
+.rate-limited {
+    color: #e60000;
+}
+.rate-limited .msg {
+    display: block;
+}
+
+.rate-limited .count {
+    display: none;
+}
+
 
 #rate-limit-count {
     font-weight: 700;

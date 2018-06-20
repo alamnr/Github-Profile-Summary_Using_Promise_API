@@ -47,7 +47,7 @@ function get(url) {
     // Handle network error
     req.onerror = () => {
       reject(Error('Network Error'));
-      
+
     }
     req.send();
   });
@@ -122,21 +122,21 @@ function getUserInfo(userName, dataObj) {
       indicatorDiv.style.width = '50%';
       indicatorDiv.innerHTML = '50% wait...';
 
-      // This code is done by following - https://developers.google.com/web/fundamentals/primers/promises#creating_a_sequence   
+      // This code is done by following - https://developers.google.com/web/fundamentals/primers/promises#creating_a_sequence
       // and  - https://medium.com/adobetech/how-to-combine-rest-api-calls-with-javascript-promises-in-node-js-or-openwhisk-d96cbc10f299
 
       // Good (data fetch time is high) Optimised solution see link - https://developers.google.com/web/fundamentals/primers/promises#creating_a_sequence
 
 /*
-      
+
      var sequence = Promise.resolve();
-  
+
      dataObj.getRepos().filter(repo => {
       return repo.fork === false && repo.size !== 0
     }).forEach((repo,currentIndex,repoArray)=>{
       var indecatorValue = 50/repoArray.length;
         let url = repo.commits_url.replace('{/sha}', '')+'?per_page=100&client_id=4451d14d8fff3a16d020&client_secret=d317892c35d7a7f4e383b92052cda6e8b7a3b3ea';
-         
+
          sequence = sequence.then(()=>{
           return getCommitPerRepos(url,null,repo,dataObj);
          }).then(commits=>{
@@ -144,20 +144,20 @@ function getUserInfo(userName, dataObj) {
           indecatorValue*=currentIndex+1;
           indicatorDiv.style.width = Number.parseFloat( 50+indecatorValue).toFixed(2) + '%';
           indicatorDiv.innerHTML = Number.parseFloat( 50+indecatorValue).toFixed(2) + '% wait...';
-        
+
           if(currentIndex === repoArray.length-1){
             console.log('All Done-', dataObj.getCommitMap());
              // All data fetching and mutating done now calculate the data for chart and generate chart
           calculateDataAndGenerateChart(dataObj);
-          
+
         }
          });
-        
-      }) 
+
+      })
 */
       // Better  (data fetch time is medium)  Optimised solution see link - https://developers.google.com/web/fundamentals/primers/promises#creating_a_sequence
 
-      /*      
+      /*
       dataObj.getRepos().filter(repo => {
         return repo.fork === false && repo.size !== 0
       }).reduce((sequence,repo,currentIndex,repoArray)=>{
@@ -168,27 +168,27 @@ function getUserInfo(userName, dataObj) {
       }).then(commits=>{
         console.log(repo.name+'-'+currentIndex,' - commits count - ',commits);
         //dataObj.getCommitMap().set(repo,commits);
-  
+
         indecatorValue*=currentIndex+1;
         indicatorDiv.style.width = Number.parseFloat( 50+indecatorValue).toFixed(2) + '%';
         indicatorDiv.innerHTML = Number.parseFloat( 50+indecatorValue).toFixed(2) + '% wait...';
-      
+
         if(currentIndex === repoArray.length-1){
           console.log('All Done-', dataObj.getCommitMap());
           //indicatorDiv.style.width = '75%';
           //indicatorDiv.innerHTML = '75% wait...';
           // All data fetching and mutating done now calculate the data for chart and generate chart
           calculateDataAndGenerateChart(dataObj);
-          
+
         }
       });
-    },Promise.resolve()); 
+    },Promise.resolve());
     */
 
 
 
       //  Best (data fetch time is low) Optimised solution see link - https://developers.google.com/web/fundamentals/primers/promises#creating_a_sequence
-    
+
       dataObj.getRepos().filter(repo => {
         return repo.fork === false && repo.size !== 0
       }).map((repo) => {
@@ -212,7 +212,7 @@ function getUserInfo(userName, dataObj) {
           }
         });
       }, Promise.resolve());
-      
+
 
       if (dataObj.getRepos().filter(repo => {
         return repo.fork === false && repo.size !== 0
@@ -220,7 +220,7 @@ function getUserInfo(userName, dataObj) {
         calculateDataAndGenerateChart(dataObj);
         checkRateLimit();
       }
-      
+
 
     }).catch(err => {
       console.log(err)
@@ -256,7 +256,7 @@ function buildUserDetails(user) {
 
 
 function calculateDataAndGenerateChart(dataObj) {
-  // calculate quarter commit count 
+  // calculate quarter commit count
   var then = new Date(dataObj.getUser().created_at);
 
   var today = new Date();
@@ -574,6 +574,7 @@ function checkRateLimit(){
   let url = 'https://api.github.com/rate_limit?client_id=4451d14d8fff3a16d020&client_secret=d317892c35d7a7f4e383b92052cda6e8b7a3b3ea';
   getJSON(url).then(rateData=>{
     //console.log(rateData);
+    document.querySelector(".rate-limit").classList.toggle("rate-limited",  rateData.rate.remaining === "0");
     document.getElementById("rate-limit-count").innerHTML = rateData.rate.remaining;
   }).catch(err=>{
     console.log(err);
