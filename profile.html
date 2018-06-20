@@ -120,13 +120,17 @@
     <br><hr>
     <footer><div class="fixed-bottom-custom"><div>GitHub profile summary is built with <span class="highlight">Vanilla Jvascript </span>  and <a href="http://www.chartjs.org/docs/latest/" target="_blank">chart.js</a> (visualization). Sources on <a target="_blank" href="https://github.com/alamnr/alamnr.github.io"> GitHub.</a></div><div> Inspired by <a href="https://profile-summary-for-github.com" target="_blank">profile-summary-for-github</a></div></div></footer>
 
-
+    <span class="rate-limit">
+        <span class="msg">The app is currently rate-limited<br>Please check back later</span>
+        <span class="count"><span id="rate-limit-count"></span> requests left <br> before rate-limit</span>
+    </span>
 
 
     <script>
         var urlParams;
         
         (window.onpopstate = function () {
+            checkRateLimit();
             var match,
                 pl = /\+/g,  // Regex for replacing addition symbol with a space
                 search = /([^&=]+)=?([^&]*)/g,

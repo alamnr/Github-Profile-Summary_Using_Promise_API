@@ -47,11 +47,7 @@ function get(url) {
     // Handle network error
     req.onerror = () => {
       reject(Error('Network Error'));
-      indicatorDiv.className = 'progress-bar progress-bar-striped progress-bar-animated bg-danger';
-      indicatorDiv.innerHTML = indicatorDiv.style.width + ' Opps, Error...';
-      setTimeout(() => progressDiv.style.visibility = 'hidden', 1000);
-      document.getElementById('errMsg').innerHTML = 'Network Error';
-      document.getElementById('errMsg').style.color = 'red';
+      
     }
     req.send();
   });
@@ -212,6 +208,7 @@ function getUserInfo(userName, dataObj) {
           if (currentIndex === repoArray.length - 1) {
             console.log('All Done-', dataObj.getCommitMap());
             calculateDataAndGenerateChart(dataObj);
+            checkRateLimit();
           }
         });
       }, Promise.resolve());
@@ -221,10 +218,19 @@ function getUserInfo(userName, dataObj) {
         return repo.fork === false && repo.size !== 0
       }).length === 0) {
         calculateDataAndGenerateChart(dataObj);
+        checkRateLimit();
       }
+      
 
-
-    }).catch(err => console.log(err))
+    }).catch(err => {
+      console.log(err)
+      var indicatorDiv = document.querySelector('#indicator');
+      indicatorDiv.className = 'progress-bar progress-bar-striped progress-bar-animated bg-danger';
+      indicatorDiv.innerHTML = indicatorDiv.style.width + ' Opps, Error...';
+      setTimeout(() => progressDiv.style.visibility = 'hidden', 1000);
+      document.getElementById('errMsg').innerHTML = err;
+      document.getElementById('errMsg').style.color = 'red';
+    })
 }
 
 function buildUserDetails(user) {
@@ -564,3 +570,13 @@ function createDataObject() {
 
 
 
+function checkRateLimit(){
+  let url = 'https://api.github.com/rate_limit?client_id=4451d14d8fff3a16d020&client_secret=d317892c35d7a7f4e383b92052cda6e8b7a3b3ea';
+  getJSON(url).then(rateData=>{
+    //console.log(rateData);
+    document.getElementById("rate-limit-count").innerHTML = rateData.rate.remaining;
+  }).catch(err=>{
+    console.log(err);
+  });
+
+}
